@@ -21,44 +21,68 @@ namespace MatchGame
     /// </summary>
     public partial class MainWindow : Window
     {
+        const int timeForGame = 1000;
+        readonly List<string> animalEmojiDB = new List<string>()
+            {
+                "🦝", "🦢", "🦩", "🦉", "🐦", "🐧", "🐌", "🐿",
+                "🐘", "🦣", "🐊", "🦕", "🐢", "🦦", "🐂",
+                "🦌", "🦬", "🦏", "🦛", "🐑", "🐫", "🦒",
+                "🐹", "🐈", "🐕", "🐅", "🦄", "🐒", "🐎",
+            };
         DispatcherTimer timer = new DispatcherTimer();
-        int tenthsOfSecondsElapsed;
+        int tenthsOfSecondsRemained;
         int matchesFound;
+        double myRecord = double.MaxValue;
+
         public MainWindow()
         {
             InitializeComponent();
 
-            timer.Interval = TimeSpan.FromSeconds(.1);
+            timer.Interval = TimeSpan.FromSeconds(.01);
             timer.Tick += Timer_Tick;
             SetUpGame();
         }
 
         private void Timer_Tick(object? sender, EventArgs e)
         {
-            tenthsOfSecondsElapsed++;
-            timeTextBlock.Text = (tenthsOfSecondsElapsed / 10F).ToString("0.0s");
+            tenthsOfSecondsRemained--;
+            timeTextBlock.Text = (tenthsOfSecondsRemained / 100F).ToString("000.00s");
+            if (tenthsOfSecondsRemained <= 0)
+            {
+                StopGame();
+            }
             if (matchesFound == 8)
             {
-                timer.Stop();
-                timeTextBlock.Text = timeTextBlock.Text + " - Play again?";
+                StopGame();
+                double score = (timeForGame - tenthsOfSecondsRemained) / 100F;
+                if (score <= myRecord)
+                {
+                    myRecord = score;
+                    recordTextBlock.Text = myRecord.ToString("00.00s");
+                    LabelForRecords.Visibility = Visibility.Hidden;
+                    lblStoryboard.Visibility = Visibility.Visible;
+                }
+                
             }
         }
 
         private void SetUpGame()
         {
-            List<string> animalEmoji = new List<string>()
-            {
-                "🦝", "🦝",
-                "🦄", "🦄",
-                "🐒", "🐒",
-                "🐘", "🐘",
-                "🐯", "🐯",
-                "🐺", "🐺",
-                "🐮", "🐮",
-                "🦁", "🦁",
-            };
+            List<string> animalEmoji = new List<string>(16);
             Random random = new Random();
-            foreach (TextBlock textBlock in mainGrid.Children.OfType<TextBlock>().Where(x => x.Name != "timeTextBlock"))
+            LabelForRecords.Visibility = Visibility.Hidden;
+            lblStoryboard.Visibility = Visibility.Hidden;
+            for (int i = 0; i < 16;)
+            {
+                int index = random.Next(animalEmojiDB.Count);
+                string nextEmoji = animalEmojiDB[index];
+                if (animalEmoji.Contains(nextEmoji))
+                    continue;
+                animalEmoji.Add(nextEmoji);
+                animalEmoji.Add(nextEmoji);
+                i += 2;
+            }
+            foreach (TextBlock textBlock in mainGrid.Children.OfType<TextBlock>().Where(x => x.Name == ""))
             {
                 int index = random.Next(animalEmoji.Count);
                 string nextEmoji = animalEmoji[index];
@@ -66,16 +90,25 @@ namespace MatchGame
                 textBlock.Visibility = Visibility.Visible;
                 animalEmoji.RemoveAt(index);
             }
-            tenthsOfSecondsElapsed = 0;
+            tenthsOfSecondsRemained = timeForGame;
             matchesFound = 0;
             timer.Start();
+        }
+
+        private void StopGame()
+        {
+            timer.Stop();
+            timeTextBlock.Text = timeTextBlock.Text + " - Play again?";
+            recordTextBlock.Text = myRecord.ToString("000.00s");
+            LabelForRecords.Visibility = Visibility.Visible;
+            recordTextBlock.Visibility = Visibility.Visible;
         }
         TextBlock lastTextBlockClicked;
         bool findingMatch;
         private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
             TextBlock textBlock = sender as TextBlock;
-            if(findingMatch == false)
+            if (findingMatch == false)
             {
                 textBlock.Visibility = Visibility.Hidden;
                 lastTextBlockClicked = textBlock;
@@ -97,7 +130,7 @@ namespace MatchGame
 
         private void TimeTextBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (matchesFound == 8)
+            if (matchesFound == 8 || tenthsOfSecondsRemained == 0)
             {
                 SetUpGame();
             }
