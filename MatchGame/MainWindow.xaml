@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Find all of the matching animals" Height="450" Width="400">
     <Window.Resources>
-        <Storyboard x:Key="blinkLabel" Duration="0:0:1"
+        <Storyboard x:Key="blinkLabel" Duration="0:0:3"
     RepeatBehavior="Forever">
             <ColorAnimationUsingKeyFrames
       Storyboard.TargetName="lblStoryboard"
@@ -25,6 +25,10 @@
       Storyboard.TargetProperty="Foreground.(SolidColorBrush.Color)">
                 <DiscreteColorKeyFrame KeyTime="0:0:0" Value="White" />
                 <DiscreteColorKeyFrame KeyTime="0:0:0.5" Value="Black" />
+                <DiscreteColorKeyFrame KeyTime="0:0:1" Value="White" />
+                <DiscreteColorKeyFrame KeyTime="0:0:1.5" Value="Black" />
+                <DiscreteColorKeyFrame KeyTime="0:0:2" Value="White" />
+                <DiscreteColorKeyFrame KeyTime="0:0:2.5" Value="Black" />
             </ColorAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
@@ -64,9 +68,9 @@
         <TextBlock Grid.Column="3" HorizontalAlignment="Center" Grid.Row="1" Text="?" VerticalAlignment="Center" FontSize="36" MouseDown="TextBlock_MouseDown"/>
         <TextBlock Grid.Column="3" HorizontalAlignment="Center" Grid.Row="2" Text="?" VerticalAlignment="Center" FontSize="36" MouseDown="TextBlock_MouseDown"/>
         <TextBlock Grid.Column="3" HorizontalAlignment="Center" Grid.Row="3" Text="?" VerticalAlignment="Center" FontSize="36" MouseDown="TextBlock_MouseDown"/>
-        <TextBlock x:Name="LabelForRecords" HorizontalAlignment="Center"  TextWrapping="Wrap"  VerticalAlignment="Center" Grid.ColumnSpan="4" FontSize="36" Text="Your records!"/>
+        <TextBlock x:Name="LabelForRecords" HorizontalAlignment="Center"  TextWrapping="Wrap"  VerticalAlignment="Center" Grid.ColumnSpan="4" FontSize="36" Text="Your previous record"/>
         <TextBlock x:Name="timeTextBlock" Text="Elapsed time" FontSize="36" Grid.ColumnSpan="4" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" MouseDown="TimeTextBlock_MouseDown"/>
-        <TextBlock x:Name="recordTextBlock" Grid.RowSpan="3" Grid.ColumnSpan="4" Grid.Row="1" Grid.Column="0" FontSize="24" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock x:Name="recordTextBlock" Grid.RowSpan="3" Grid.ColumnSpan="4" Grid.Row="1" Grid.Column="0" FontSize="36" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center"/>
         <Label x:Name="lblStoryboard" Content="Congradulations with new Record" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.ColumnSpan="4" FontSize="24" Height="57"/>
     </Grid>
 </Window>
