@@ -62,7 +62,7 @@ namespace MatchGame
                     LabelForRecords.Visibility = Visibility.Hidden;
                     lblStoryboard.Visibility = Visibility.Visible;
                 }
-                
+
             }
         }
 
@@ -98,8 +98,12 @@ namespace MatchGame
         private void StopGame()
         {
             timer.Stop();
+            foreach (TextBlock textBlock in mainGrid.Children.OfType<TextBlock>().Where(x => x.Name == ""))
+            {
+                textBlock.Visibility = Visibility.Hidden;
+            }
             timeTextBlock.Text = timeTextBlock.Text + " - Play again?";
-            recordTextBlock.Text = myRecord.ToString("000.00s");
+            recordTextBlock.Text = myRecord < double.MaxValue ? myRecord.ToString("000.00s") : "";
             LabelForRecords.Visibility = Visibility.Visible;
             recordTextBlock.Visibility = Visibility.Visible;
         }
